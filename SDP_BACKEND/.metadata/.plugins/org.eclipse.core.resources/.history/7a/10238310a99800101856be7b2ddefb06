@@ -1,0 +1,2 @@
+spring.application.name=OnlineExaminationSystem
+server.port=30796

@@ -1,0 +1,79 @@
+package com.klef.sdp.controller;
+
+import com.klef.sdp.model.*;
+import com.klef.sdp.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@CrossOrigin("*")
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
+
+    @Autowired
+    private AdminService adminService;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginAdmin(@RequestBody Admin admin) {
+        Admin existingAdmin = adminService.getAdminByUsername(admin.getUsername());
+        if (existingAdmin != null && existingAdmin.getPassword().equals(admin.getPassword())) {
+            return ResponseEntity.ok(Map.of("success", true, "admin", existingAdmin));
+        }
+        return ResponseEntity.ok(Map.of("success", false, "message", "Invalid credentials"));
+    }
+
+    @PostMapping("/courses")
+    public Course addCourse(@RequestBody Course course) {
+        return adminService.addCourse(course);
+    }
+
+    @GetMapping("/courses")
+    public List<Course> viewCourses() {
+        return adminService.viewCourses();
+    }
+
+    @PutMapping("/courses/{id}")
+    public Course updateCourse(@PathVariable Long id, @RequestBody Course course) {
+        return adminService.updateCourse(id, course);
+    }
+
+    @PostMapping("/teachers")
+    public Teacher addTeacher(@RequestBody Teacher teacher) {
+        return adminService.addTeacher(teacher);
+    }
+
+    @GetMapping("/teachers")
+    public List<Teacher> viewTeachers() {
+        return adminService.viewTeachers();
+    }
+
+    @GetMapping("/students")
+    public List<Student> viewStudents() {
+        return adminService.viewStudents();
+    }
+
+    @GetMapping("/exams")
+    public List<Exam> viewExams() {
+        return adminService.viewExams();
+    }
+
+    @GetMapping("/results")
+    public List<Result> viewResults() {
+        return adminService.viewResults();
+    }
+    @DeleteMapping("/students/{id}")
+    public ResponseEntity<?> deleteStudent(@PathVariable Long id) {
+        try {
+            adminService.deleteStudent(id);
+            return ResponseEntity.ok(Map.of("success", true, "message", "Student deleted"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
+    
+}

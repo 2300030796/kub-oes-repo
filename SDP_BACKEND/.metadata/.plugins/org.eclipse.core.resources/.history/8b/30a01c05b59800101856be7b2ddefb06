@@ -1,0 +1,11 @@
+public interface StudentService {
+    Student getProfile(Long id);
+    Student updateProfile(Student student);
+
+    List<Exam> viewUpcomingExams();
+    List<Result> viewResults(Long studentId);
+
+    long countOngoingExams(Long studentId);
+    long countUpcomingExams(Long studentId);
+    long countCompletedExams(Long studentId);
+}

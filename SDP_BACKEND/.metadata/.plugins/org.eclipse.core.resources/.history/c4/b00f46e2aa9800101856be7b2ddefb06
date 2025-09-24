@@ -1,0 +1,17 @@
+package com.klef.sdp.service;
+
+import com.klef.sdp.model.*;
+import java.util.List;
+
+public interface AdminService {
+    Course addCourse(Course course);
+    Course updateCourse(Long id, Course course);
+    List<Course> viewCourses();
+
+    Teacher addTeacher(Teacher teacher);
+    List<Teacher> viewTeachers();
+
+    List<Student> viewStudents();
+    List<Exam> viewExams();
+    List<Result> viewResults();
+}

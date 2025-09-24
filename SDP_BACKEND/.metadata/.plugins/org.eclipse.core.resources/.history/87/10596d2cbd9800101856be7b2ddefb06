@@ -1,0 +1,14 @@
+public interface AdminService {
+    Admin getAdminByUsername(String username);
+    Course addCourse(Course course);
+    List<Course> viewCourses();
+    Course updateCourse(Long id, Course course);
+    Teacher addTeacher(Teacher teacher);
+    List<Teacher> viewTeachers();
+    List<Student> viewStudents();
+    List<Exam> viewExams();
+    List<Result> viewResults();
+
+    // Add this method
+    void deleteStudent(Long id);
+}

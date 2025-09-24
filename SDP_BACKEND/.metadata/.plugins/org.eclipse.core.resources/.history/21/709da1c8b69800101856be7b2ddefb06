@@ -1,0 +1,46 @@
+package com.klef.sdp.controller;
+
+import com.klef.sdp.model.*;
+import com.klef.sdp.service.TeacherService;
+
+import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@CrossOrigin("*")
+@RestController
+@RequestMapping("/teacher")
+public class TeacherController {
+
+    @Autowired
+    private TeacherService teacherService;
+
+    @PostMapping("/exam")
+    public Exam scheduleExam(@RequestBody Exam exam) { return teacherService.scheduleExam(exam); }
+
+    @GetMapping("/exams")
+    public List<Exam> viewExams() { return teacherService.viewExams(); }
+
+    @PostMapping("/result")
+    public Result addResult(@RequestBody Result result) { return teacherService.addResult(result); }
+
+    @GetMapping("/results")
+    public List<Result> viewResults() { return teacherService.viewResults(); }
+
+    @PostMapping("/student")
+    public Student addStudent(@RequestBody Student student) { return teacherService.addStudent(student); }
+
+    @GetMapping("/students")
+    public List<Student> viewStudents() { return teacherService.viewStudents(); }
+
+    @GetMapping("/profile/{id}")
+    public Teacher getProfile(@PathVariable Long id) { return teacherService.getProfile(id); }
+
+    @PutMapping("/profile")
+    public Teacher updateProfile(@RequestBody Teacher teacher) { return teacherService.updateProfile(teacher); }
+    @PostMapping("/exam/{id}/questions")
+    public List<Question> addQuestions(@PathVariable Long id, @RequestBody List<Question> questions) {
+        return teacherService.addQuestions(id, questions);
+    }
+}

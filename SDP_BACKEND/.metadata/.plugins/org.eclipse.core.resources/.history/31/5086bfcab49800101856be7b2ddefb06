@@ -1,0 +1,28 @@
+package com.klef.sdp.controller;
+
+import com.klef.sdp.model.*;
+import com.klef.sdp.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@CrossOrigin("*")
+@RestController
+@RequestMapping("/student")
+public class StudentController {
+
+    @Autowired
+    private StudentService studentService;
+
+    @GetMapping("/profile/{id}")
+    public Student getProfile(@PathVariable Long id) { return studentService.getProfile(id); }
+
+    @PutMapping("/profile")
+    public Student updateProfile(@RequestBody Student student) { return studentService.updateProfile(student); }
+
+    @GetMapping("/exams/upcoming")
+    public List<Exam> viewUpcomingExams() { return studentService.viewUpcomingExams(); }
+
+    @GetMapping("/results/{id}")
+    public List<Result> viewResults(@PathVariable Long id) { return studentService.viewResults(id); }
+}

@@ -1,0 +1,5 @@
+package com.klef.sdp.model;
+
+import jakarta.persistence.*;
+ALTER TABLE student_table ADD COLUMN department VARCHAR(50);
+ALTER TABLE student_table ADD COLUMN dob DATE;  -- or VARCHAR(10) if you store as string

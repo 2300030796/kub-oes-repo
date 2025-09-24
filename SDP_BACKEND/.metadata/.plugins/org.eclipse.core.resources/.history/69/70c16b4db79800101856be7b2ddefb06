@@ -1,0 +1,22 @@
+package com.klef.sdp.service;
+
+import com.klef.sdp.model.*;
+import java.util.List;
+
+import org.aspectj.weaver.patterns.TypePatternQuestions.Question;
+
+public interface TeacherService {
+    Exam scheduleExam(Exam exam);
+    List<Exam> viewExams();
+
+    Result addResult(Result result);
+    List<Result> viewResults();
+
+    Student addStudent(Student student);
+    List<Student> viewStudents();
+
+    Teacher getProfile(Long id);
+    Teacher updateProfile(Teacher teacher);
+    List<Question> addQuestions(Long examId, List<Question> questions);
+
+}

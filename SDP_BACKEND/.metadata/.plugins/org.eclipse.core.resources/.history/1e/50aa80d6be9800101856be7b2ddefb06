@@ -1,0 +1,96 @@
+package com.klef.sdp.service;
+
+import com.klef.sdp.model.*;
+import com.klef.sdp.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class TeacherServiceImpl implements TeacherService {
+
+    @Autowired
+    private TeacherRepository teacherRepo;
+
+    @Autowired
+    private ExamRepository examRepo;
+
+    @Autowired
+    private CourseRepository courseRepo;
+
+    @Autowired
+    private ResultRepository resultRepo;
+
+    @Autowired
+    private StudentRepository studentRepo;
+
+    @Autowired
+    private QuestionRepository questionRepo;
+
+    @Override
+    public Exam scheduleExam(Exam exam) {
+        // Ensure course exists
+        if (exam.getCourse() == null || exam.getCourse().getId() == null) {
+            throw new RuntimeException("Course ID is required to schedule exam");
+        }
+
+        Course course = courseRepo.findById(exam.getCourse().getId())
+                .orElseThrow(() -> new RuntimeException("Course not found with ID: " + exam.getCourse().getId()));
+
+        exam.setCourse(course);
+        return examRepo.save(exam);
+    }
+
+    @Override
+    public List<Exam> viewExams() {
+        return examRepo.findAll();
+    }
+
+    @Override
+    public Result addResult(Result result) {
+        return resultRepo.save(result);
+    }
+
+    @Override
+    public List<Result> viewResults() {
+        return resultRepo.findAll();
+    }
+
+    @Override
+    public Student addStudent(Student student) {
+        return studentRepo.save(student);
+    }
+
+    @Override
+    public List<Student> viewStudents() {
+        return studentRepo.findAll();
+    }
+
+    @Override
+    public Teacher getProfile(Long id) {
+        return teacherRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public Teacher updateProfile(Teacher teacher) {
+        return teacherRepo.save(teacher);
+    }
+
+    @Override
+    public List<Question> addQuestions(Long examId, List<Question> questions) {
+        Exam exam = examRepo.findById(examId).orElse(null);
+        if (exam == null) return null;
+
+        for (Question q : questions) {
+            q.setExam(exam);
+        }
+
+        return questionRepo.saveAll(questions);
+    }
+
+    @Override
+    public List<Question> getQuestionsByExam(Long examId) {
+        return questionRepo.findByExamId(examId);
+    }
+}
