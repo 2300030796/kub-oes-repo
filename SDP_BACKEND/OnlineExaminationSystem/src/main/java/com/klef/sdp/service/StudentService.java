@@ -10,4 +10,5 @@ public interface StudentService {
     List<Exam> viewOngoingExamsForStudent(Long studentId);
     Result submitResult(Result result);
     List<Result> viewResultsByStudent(Long studentId);
+    Student getlogin(Student s);
 }

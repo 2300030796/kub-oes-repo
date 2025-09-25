@@ -3,6 +3,7 @@ package com.klef.sdp.controller;
 import com.klef.sdp.model.*;
 import com.klef.sdp.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -42,5 +43,16 @@ public class StudentController {
     @GetMapping("/results/{studentId}")
     public List<Result> viewResults(@PathVariable Long studentId) {
         return studentService.viewResultsByStudent(studentId);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Student loginRequest) {
+        Student s = studentService.getlogin(loginRequest);
+
+        if (s != null) {
+            return ResponseEntity.ok(s);  // 200 OK with student object
+        } else {
+            return ResponseEntity.status(404)
+                                 .body("Invalid email or password");  // 401
+        }
     }
 }

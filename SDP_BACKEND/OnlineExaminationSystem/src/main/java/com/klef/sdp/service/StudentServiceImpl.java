@@ -48,4 +48,11 @@ public class StudentServiceImpl implements StudentService {
     public List<Result> viewResultsByStudent(Long studentId) {
         return resultRepository.findByStudentId(studentId);
     }
+
+	@Override
+	public Student getlogin(Student s) {
+
+		return studentRepository.findByEmailAndPassword(s.getEmail(),s.getPassword());
+		 
+	}
 }

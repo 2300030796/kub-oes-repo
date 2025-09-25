@@ -80,4 +80,10 @@ public class TeacherServiceImpl implements TeacherService {
     public Teacher updateTeacher(Teacher teacher) {
         return teacherRepository.save(teacher);
     }
+
+	@Override
+	public Teacher getlogin(Teacher t) {
+		// TODO Auto-generated method stub
+		return teacherRepository.findByEmailAndPassword(t.getEmail(), t.getPassword());
+	}
 }

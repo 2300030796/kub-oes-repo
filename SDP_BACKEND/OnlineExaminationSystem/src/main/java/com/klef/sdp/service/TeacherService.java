@@ -19,4 +19,5 @@ public interface TeacherService {
 
     Teacher getTeacherById(Long id);
     Teacher updateTeacher(Teacher teacher);
+    Teacher getlogin(Teacher t);
 }

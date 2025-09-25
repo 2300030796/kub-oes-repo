@@ -3,12 +3,13 @@ package com.klef.sdp.controller;
 import com.klef.sdp.model.*;
 import com.klef.sdp.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins="*")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/teacher")
 public class TeacherController {
@@ -70,4 +71,16 @@ public class TeacherController {
     public Teacher updateProfile(@RequestBody Teacher teacher) {
         return teacherService.updateTeacher(teacher);
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> loginTeacher(@RequestBody Teacher teacher) {
+        Teacher t = teacherService.getlogin(teacher);
+
+        if (t != null) {
+            return ResponseEntity.ok(t);
+        } else {  
+            return ResponseEntity.status(404)
+                                 .body("Invalid email or password");
+        }
+    }
+    
 }
