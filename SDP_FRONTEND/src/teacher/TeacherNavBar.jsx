@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from '../contextapi/AuthContext';
 
 // Import Teacher pages/components
-import TeacherDashboard from './TeacherDashboard';
+import TeacherDashboard from './TeacherDashBoard';
 import ExamSchedule from './ExamSchedule';
 import StudentExamResult from './StudentExamResult';
 import StudentRegistration from './StudentRegistration';
