@@ -23,7 +23,7 @@ export default function StudentNavBar() {
 
   const handleLogout = () => {
     setIsStudentLoggedIn(false); // update context
-    navigate('/');  // redirect
+    navigate('/student-login');  // redirect
   };
 
   // Hide navbar if not logged in
