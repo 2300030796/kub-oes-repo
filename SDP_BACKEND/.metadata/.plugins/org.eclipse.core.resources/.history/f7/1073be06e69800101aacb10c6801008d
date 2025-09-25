@@ -1,7 +1,0 @@
-package com.klef.sdp.repository;
-
-import com.klef.sdp.model.Result;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface ResultRepository extends JpaRepository<Result, Long> {
-}

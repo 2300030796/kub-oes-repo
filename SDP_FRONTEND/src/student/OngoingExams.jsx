@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Card, CardContent, Typography, RadioGroup, FormControlLabel, Radio, Button, Grid, CircularProgress } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import config from '../config';
 
 export default function OngoingExams() {
@@ -16,8 +15,8 @@ export default function OngoingExams() {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    // Fetch exams scheduled for student
-    axios.get(`${config.url}/student/exams/upcoming`)
+    // Fetch upcoming exams for student
+    axios.get(`${config.url}/student/exams/ongoing/1`)
       .then(res => setExams(res.data))
       .catch(() => toast.error('Failed to fetch exams'))
       .finally(() => setLoading(false));
@@ -31,13 +30,17 @@ export default function OngoingExams() {
 
   const startExam = (exam) => {
     setSelectedExam(exam);
-    setAnswers(new Array(exam.questions.length).fill(null));
-    const now = new Date();
-    const endTime = new Date(exam.scheduledDateTime);
-    endTime.setMinutes(endTime.getMinutes() + exam.duration); // add exam duration
-    setTimeLeft(Math.floor((endTime - now) / 1000));
 
-    // countdown timer
+    // If your backend provides questions, initialize answers array
+    setAnswers(exam.questions ? new Array(exam.questions.length).fill(null) : []);
+
+    // Calculate time left in seconds
+    const now = new Date();
+    const startTime = new Date(exam.startTime);
+    const endTime = new Date(exam.endTime);
+    const remaining = Math.floor((endTime - now) / 1000);
+    setTimeLeft(remaining > 0 ? remaining : 0);
+
     timerRef.current = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -85,22 +88,29 @@ export default function OngoingExams() {
           <Grid container spacing={3}>
             {exams.map(exam => {
               const now = new Date();
-              const examTime = new Date(exam.scheduledDateTime);
-              const examEndTime = new Date(examTime);
-              examEndTime.setMinutes(examEndTime.getMinutes() + exam.duration);
-              const isLive = now >= examTime && now <= examEndTime;
+              const startTime = new Date(exam.startTime);
+              const endTime = new Date(exam.endTime);
+              const isLive = now >= startTime && now <= endTime;
 
               return (
                 <Grid item xs={12} md={6} key={exam.id}>
                   <Card className="shadow-sm p-3">
                     <CardContent>
                       <Typography variant="h6">{exam.name}</Typography>
-                      <Typography variant="body2">Scheduled: {new Date(exam.scheduledDateTime).toLocaleString()}</Typography>
+                      <Typography variant="body2">Subject: {exam.subjectName}</Typography>
+                      <Typography variant="body2">Teacher: {exam.teacherName}</Typography>
+                      <Typography variant="body2">
+                        Scheduled: {startTime.toLocaleString()} - {endTime.toLocaleString()}
+                      </Typography>
                       <Typography variant="body2">Duration: {exam.duration} minutes</Typography>
                       {isLive ? (
-                        <Button variant="contained" color="primary" className="mt-3" onClick={() => startExam(exam)}>Start Exam</Button>
+                        <Button variant="contained" color="primary" className="mt-3" onClick={() => startExam(exam)}>
+                          Start Exam
+                        </Button>
                       ) : (
-                        <Typography className="mt-2 text-muted">{now < examTime ? 'Exam not started yet' : 'Exam ended'}</Typography>
+                        <Typography className="mt-2 text-muted">
+                          {now < startTime ? 'Exam not started yet' : 'Exam ended'}
+                        </Typography>
                       )}
                     </CardContent>
                   </Card>
@@ -116,7 +126,7 @@ export default function OngoingExams() {
             Time Left: {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
           </Typography>
 
-          {selectedExam.questions.map((q, qIndex) => (
+          {selectedExam.questions && selectedExam.questions.map((q, qIndex) => (
             <Card className="mb-4 shadow-sm p-3" key={qIndex}>
               <CardContent>
                 <Typography variant="h6">{qIndex + 1}. {q.questionText}</Typography>

@@ -38,7 +38,8 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public List<Exam> viewUpcomingExams() {
-        return examRepository.findByExamDateTimeAfter(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        return examRepository.findByStartTimeAfter(now);
     }
 
     @Override

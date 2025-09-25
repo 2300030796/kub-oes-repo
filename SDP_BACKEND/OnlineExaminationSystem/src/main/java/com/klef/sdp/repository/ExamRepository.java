@@ -6,5 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ExamRepository extends JpaRepository<Exam, Long> {
-    List<Exam> findByExamDateTimeAfter(LocalDateTime now);
+	 List<Exam> findByStartTimeAfter(LocalDateTime now); 
+	    List<Exam> findByStartTimeBeforeAndEndTimeAfter(LocalDateTime start, LocalDateTime end);
 }

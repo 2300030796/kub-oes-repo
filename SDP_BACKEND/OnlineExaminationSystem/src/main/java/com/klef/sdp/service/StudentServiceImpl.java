@@ -31,13 +31,16 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Exam> viewUpcomingExams() {
-        return examRepository.findByExamDateTimeAfter(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        return examRepository.findByStartTimeAfter(now);
     }
 
     @Override
     public List<Exam> viewOngoingExamsForStudent(Long studentId) {
-        return examRepository.findAll();
+        LocalDateTime now = LocalDateTime.now();
+        return examRepository.findByStartTimeBeforeAndEndTimeAfter(now, now);
     }
+
 
     @Override
     public Result submitResult(Result result) {

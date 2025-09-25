@@ -17,9 +17,17 @@ public class TeacherController {
     @Autowired
     private TeacherService teacherService;
 
+    
     @PostMapping("/exam")
-    public Exam scheduleExam(@RequestBody Exam exam) {
-        return teacherService.scheduleExam(exam);
+    public ResponseEntity<?> addexam(@RequestBody Exam exam) {
+    	Exam e =teacherService.scheduleExam(exam);
+
+        if (e != null) {
+            return ResponseEntity.ok(e);
+        } else {  
+            return ResponseEntity.status(404)
+                                 .body("Invalid email or password");
+        }
     }
 
     @GetMapping("/exams")

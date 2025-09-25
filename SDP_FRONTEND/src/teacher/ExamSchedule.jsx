@@ -1,110 +1,168 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { Card, CardContent, Typography, TextField, Button, Grid, CircularProgress } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import config from '../config';
+import config from '../config.js';
 
 export default function ExamSchedule() {
-  const [courses, setCourses] = useState([]);
   const [exam, setExam] = useState({
-    name: '',       // renamed to match backend
-    courseId: '',
+    name: '',
     date: '',
     startTime: '',
-    endTime: ''
+    endTime: '',
+    duration: '',
+    teacherName: '',
+    subjectName: ''
   });
 
-  useEffect(() => {
-    // Fetch courses from admin API
-    axios.get(`${config.url}/admin/courses`)
-      .then(res => setCourses(res.data))
-      .catch(() => toast.error('Failed to fetch courses'));
-  }, []);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setExam({ ...exam, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Prepare payload matching backend entity
+    const startDateTime = `${exam.date}T${exam.startTime}`;
+    const endDateTime = `${exam.date}T${exam.endTime}`;
+
     const payload = {
-      name: exam.name,                    // matches Exam.name in backend
-      date: exam.date,
-      startTime: exam.startTime,
-      endTime: exam.endTime,
-      course: { id: parseInt(exam.courseId) } // course object with id
+      name: exam.name,
+      startTime: startDateTime,
+      endTime: endDateTime,
+      duration: exam.duration,
+      teacherName: exam.teacherName,
+      subjectName: exam.subjectName
     };
 
     axios.post(`${config.url}/teacher/exam`, payload)
       .then(() => {
         toast.success('Exam scheduled successfully!');
-        setExam({ name: '', courseId: '', date: '', startTime: '', endTime: '' });
+        setExam({
+          name: '',
+          date: '',
+          startTime: '',
+          endTime: '',
+          duration: '',
+          teacherName: '',
+          subjectName: ''
+        });
       })
-      .catch(() => toast.error('Failed to schedule exam'));
+      .catch(() => toast.error('Failed to schedule exam'))
+      .finally(() => setLoading(false));
   };
 
   return (
-    <div className="d-flex justify-content-center mt-5">
-      <div className="card shadow-lg rounded-4 p-4" style={{ maxWidth: '600px', width: '100%' }}>
-        <h3 className="text-center mb-4 text-primary fw-bold">Schedule Exam</h3>
-        <form onSubmit={handleSubmit} className="row g-3">
-          <div className="col-md-12">
-            <label className="form-label">Exam Name</label>
-            <input type="text" className="form-control shadow-sm"
-              value={exam.name}
-              onChange={(e) => setExam({ ...exam, name: e.target.value })}
-              required
-            />
-          </div>
+    <div className="container mt-5">
+      <ToastContainer />
+      <Typography variant="h4" className="mb-4 text-center">Schedule Exam</Typography>
 
-          <div className="col-md-12">
-            <label className="form-label">Course</label>
-            <select className="form-select shadow-sm"
-              value={exam.courseId}
-              onChange={(e) => setExam({ ...exam, courseId: e.target.value })}
-              required
-            >
-              <option value="">Select Course</option>
-              {courses.map(course => (
-                <option key={course.id} value={course.id}>{course.name}</option>
-              ))}
-            </select>
-          </div>
+      <Card className="shadow-sm p-4">
+        <CardContent>
+          {loading ? (
+            <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+              <CircularProgress />
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Exam Name"
+                    name="name"
+                    value={exam.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
 
-          <div className="col-md-6">
-            <label className="form-label">Date</label>
-            <input type="date" className="form-control shadow-sm"
-              value={exam.date}
-              onChange={(e) => setExam({ ...exam, date: e.target.value })}
-              required
-            />
-          </div>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Date"
+                    type="date"
+                    name="date"
+                    value={exam.date}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    required
+                  />
+                </Grid>
 
-          <div className="col-md-3">
-            <label className="form-label">Start Time</label>
-            <input type="time" className="form-control shadow-sm"
-              value={exam.startTime}
-              onChange={(e) => setExam({ ...exam, startTime: e.target.value })}
-              required
-            />
-          </div>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    fullWidth
+                    label="Start Time"
+                    type="time"
+                    name="startTime"
+                    value={exam.startTime}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    required
+                  />
+                </Grid>
 
-          <div className="col-md-3">
-            <label className="form-label">End Time</label>
-            <input type="time" className="form-control shadow-sm"
-              value={exam.endTime}
-              onChange={(e) => setExam({ ...exam, endTime: e.target.value })}
-              required
-            />
-          </div>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    fullWidth
+                    label="End Time"
+                    type="time"
+                    name="endTime"
+                    value={exam.endTime}
+                    onChange={handleChange}
+                    InputLabelProps={{ shrink: true }}
+                    required
+                  />
+                </Grid>
 
-          <div className="col-12 mt-3">
-            <button type="submit" className="btn btn-primary w-100 shadow-sm fw-semibold">
-              ➕ Schedule Exam
-            </button>
-          </div>
-        </form>
-      </div>
-      <ToastContainer position="top-center" />
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Duration (minutes)"
+                    name="duration"
+                    value={exam.duration}
+                    onChange={handleChange}
+                    placeholder="e.g., 120"
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Teacher Name"
+                    name="teacherName"
+                    value={exam.teacherName}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Subject Name"
+                    name="subjectName"
+                    value={exam.subjectName}
+                    onChange={handleChange}
+                    required
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button type="submit" variant="contained" color="primary" fullWidth>
+                    Schedule Exam
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

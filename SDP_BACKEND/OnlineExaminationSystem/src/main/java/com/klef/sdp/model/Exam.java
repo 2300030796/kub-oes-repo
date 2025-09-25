@@ -12,20 +12,83 @@ public class Exam {
     private Long id;
 
     @Column(length = 50, nullable = false)
-    private String name;
+    private String name;  // Exam Name
 
-    private LocalDateTime examDateTime;
+    @Column(nullable = false)
+    private LocalDateTime startTime;
 
-    @Column(length = 20)
-    private String duration;
+    @Column(nullable = false)
+    private LocalDateTime endTime;
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public LocalDateTime getExamDateTime() { return examDateTime; }
-    public void setExamDateTime(LocalDateTime examDateTime) { this.examDateTime = examDateTime; }
-    public String getDuration() { return duration; }
-    public void setDuration(String duration) { this.duration = duration; }
+    @Column(length = 20, nullable = false)
+    private String duration;  // in minutes
+
+    @Column(length = 50, nullable = false)
+    private String teacherName;
+
+    @Column(length = 50, nullable = false)
+    private String subjectName;
+
+    public Exam() {}
+
+    public Exam(String name, LocalDateTime startTime, LocalDateTime endTime, String duration, String teacherName, String subjectName) {
+        this.name = name;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.teacherName = teacherName;
+        this.subjectName = subjectName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
 }
