@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./SDP_BACKEND/OnlineExaminationSystem
-          file: ./backend.Dockerfile
+          file: ./SDP_BACKEND/OnlineExaminationSystem/backend.Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-backend-exam:latest
 
@@ -35,6 +35,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./SDP_FRONTEND
-          file: ./frontend.Dockerfile
+          file: ./SDP_FRONTEND/frontend.Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-frontend-exam:latest
