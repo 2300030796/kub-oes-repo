@@ -13,8 +13,8 @@ import TeacherLogin from "./teacher/TeacherLogin";
 import AdminLogin from "./admin/AdminLogin";
 
 // Dashboards
-import StudentDashboard from "./student/StudentDashboard";
-import TeacherDashboard from "./teacher/TeacherDashboard";
+import StudentDashboard from "./student/StudentDashBoard";
+import TeacherDashboard from "./teacher/TeacherDashBoard";
 import AdminDashboard from "./admin/AdminDashBoard";
 
 function AppContent() {
